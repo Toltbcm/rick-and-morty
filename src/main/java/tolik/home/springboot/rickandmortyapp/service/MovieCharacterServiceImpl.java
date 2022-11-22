@@ -20,6 +20,8 @@ public class MovieCharacterServiceImpl implements MovieCharacterService {
     private final HttpClient httpClient;
     private final MovieCharacterRepository repository;
     private final MovieCharacterMapper mapper;
+    private final String CRON_JOB = "0 0 * * * *";
+    private final String CHARACTERS_URL = "https://rickandmortyapi.com/api/character";
 
     public MovieCharacterServiceImpl(HttpClient httpClient,
             MovieCharacterRepository movieCharacterRepository,
@@ -30,12 +32,10 @@ public class MovieCharacterServiceImpl implements MovieCharacterService {
     }
 
     @PostConstruct
-    @Scheduled(cron = "0 0 * * * *")
+    @Scheduled(cron = CRON_JOB)
     @Override
     public void syncExternalCharacters() {
-        ApiResponseDto apiResponseDto = httpClient.get(
-                "https://rickandmortyapi.com/api/character",
-                ApiResponseDto.class);
+        ApiResponseDto apiResponseDto = httpClient.get(CHARACTERS_URL, ApiResponseDto.class);
         saveDtoToDb(apiResponseDto);
         while (apiResponseDto.getInfo().getNext() != null) {
             apiResponseDto = httpClient.get(apiResponseDto.getInfo().getNext(),
