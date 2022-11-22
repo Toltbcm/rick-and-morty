@@ -1,6 +1,6 @@
 package tolik.home.springboot.rickandmortyapp.model;
 
-enum Status {
+public enum Status {
     ALIVE("Alive"),
     DEAD("Dead"),
     UNKNOWN("unknown");

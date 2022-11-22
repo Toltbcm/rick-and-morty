@@ -1,6 +1,6 @@
 package tolik.home.springboot.rickandmortyapp.model;
 
-enum Gender {
+public enum Gender {
     MALE("Male"),
     FEMALE("Female"),
     GENDERLESS("Genderless"),
