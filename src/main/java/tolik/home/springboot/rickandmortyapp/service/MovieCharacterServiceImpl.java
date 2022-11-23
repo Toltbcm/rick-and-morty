@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 import tolik.home.springboot.rickandmortyapp.dto.external.ApiCharacterDto;
 import tolik.home.springboot.rickandmortyapp.dto.external.ApiResponseDto;
 import tolik.home.springboot.rickandmortyapp.dto.mapper.MovieCharacterMapper;
+import tolik.home.springboot.rickandmortyapp.model.Gender;
 import tolik.home.springboot.rickandmortyapp.model.MovieCharacter;
+import tolik.home.springboot.rickandmortyapp.model.Status;
 import tolik.home.springboot.rickandmortyapp.repository.MovieCharacterRepository;
 
 @Service
@@ -56,12 +58,11 @@ public class MovieCharacterServiceImpl implements MovieCharacterService {
         return repository.findAllByNameContains(namePart);
     }
 
-    private void saveDtoToDb(ApiResponseDto responseDto) {
+    List<MovieCharacter> saveDtoToDb(ApiResponseDto responseDto) {
         Map<Long, ApiCharacterDto> externalDtos = Arrays.stream(responseDto.getResults())
                 .collect(Collectors.toMap(ApiCharacterDto::getId, Function.identity()));
         Set<Long> externalIds = externalDtos.keySet();
-        List<MovieCharacter> existingCharacters = repository
-                .findAllByExternalIdIn(externalIds);
+        List<MovieCharacter> existingCharacters = repository.findAllByExternalIdIn(externalIds);
         Map<Long, MovieCharacter> existingCharactersWithIds = existingCharacters.stream()
                 .collect(Collectors.toMap(MovieCharacter::getExternalId, Function.identity()));
         Set<Long> existingIds = existingCharactersWithIds.keySet();
@@ -69,7 +70,16 @@ public class MovieCharacterServiceImpl implements MovieCharacterService {
         List<MovieCharacter> charactersToSave = externalIds.stream()
                 .map(i -> mapper.parseApiCharacterResponseDto(externalDtos.get(i)))
                 .collect(Collectors.toList());
-        repository.saveAll(charactersToSave);
+        return repository.saveAll(charactersToSave);
     }
 
+    private boolean equalById(ApiCharacterDto apiCharacterDto, MovieCharacter movieCharacter) {
+        return movieCharacter != null
+                && (apiCharacterDto.getId().equals(movieCharacter.getExternalId())
+                && apiCharacterDto.getName().equals(movieCharacter.getName())
+                && Status.valueOf(apiCharacterDto.getStatus().toUpperCase())
+                .equals(movieCharacter.getStatus())
+                && Gender.valueOf(apiCharacterDto.getGender().toUpperCase())
+                .equals(movieCharacter.getGender()));
+    }
 }
