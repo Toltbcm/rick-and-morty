@@ -7,14 +7,13 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import tolik.home.springboot.rickandmortyapp.dto.external.ApiCharacterDto;
 import tolik.home.springboot.rickandmortyapp.dto.external.ApiResponseDto;
 import tolik.home.springboot.rickandmortyapp.dto.mapper.MovieCharacterMapper;
-import tolik.home.springboot.rickandmortyapp.model.Gender;
 import tolik.home.springboot.rickandmortyapp.model.MovieCharacter;
-import tolik.home.springboot.rickandmortyapp.model.Status;
 import tolik.home.springboot.rickandmortyapp.repository.MovieCharacterRepository;
 
 @Service
@@ -22,8 +21,8 @@ public class MovieCharacterServiceImpl implements MovieCharacterService {
     private final HttpClient httpClient;
     private final MovieCharacterRepository repository;
     private final MovieCharacterMapper mapper;
-    private final String CRON_JOB = "0 0 * * * *";
-    private final String CHARACTERS_URL = "https://rickandmortyapi.com/api/character";
+    @Value("${characters.synchronize.url}")
+    private String charactersUrl;
 
     public MovieCharacterServiceImpl(HttpClient httpClient,
             MovieCharacterRepository movieCharacterRepository,
@@ -34,10 +33,10 @@ public class MovieCharacterServiceImpl implements MovieCharacterService {
     }
 
     @PostConstruct
-    @Scheduled(cron = CRON_JOB)
+    @Scheduled(cron = "${cronjob.synchronize.characters}")
     @Override
     public void syncExternalCharacters() {
-        ApiResponseDto apiResponseDto = httpClient.get(CHARACTERS_URL, ApiResponseDto.class);
+        ApiResponseDto apiResponseDto = httpClient.get(charactersUrl, ApiResponseDto.class);
         saveDtoToDb(apiResponseDto);
         while (apiResponseDto.getInfo().getNext() != null) {
             apiResponseDto = httpClient.get(apiResponseDto.getInfo().getNext(),
@@ -71,15 +70,5 @@ public class MovieCharacterServiceImpl implements MovieCharacterService {
                 .map(i -> mapper.parseApiCharacterResponseDto(externalDtos.get(i)))
                 .collect(Collectors.toList());
         return repository.saveAll(charactersToSave);
-    }
-
-    private boolean equalById(ApiCharacterDto apiCharacterDto, MovieCharacter movieCharacter) {
-        return movieCharacter != null
-                && (apiCharacterDto.getId().equals(movieCharacter.getExternalId())
-                && apiCharacterDto.getName().equals(movieCharacter.getName())
-                && Status.valueOf(apiCharacterDto.getStatus().toUpperCase())
-                .equals(movieCharacter.getStatus())
-                && Gender.valueOf(apiCharacterDto.getGender().toUpperCase())
-                .equals(movieCharacter.getGender()));
     }
 }

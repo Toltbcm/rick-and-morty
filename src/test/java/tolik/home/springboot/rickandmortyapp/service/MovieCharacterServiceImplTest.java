@@ -46,7 +46,6 @@ class MovieCharacterServiceImplTest {
         summerSmithDto.setName("Summer Smith");
         summerSmithDto.setGender("Female");
         summerSmithDto.setStatus("Alive");
-
         MovieCharacter rickSanchez = new MovieCharacter();
         rickSanchez.setExternalId(1L);
         rickSanchez.setName("Rick Sanchez");
@@ -62,19 +61,15 @@ class MovieCharacterServiceImplTest {
         summerSmith.setName("Summer Smith");
         summerSmith.setGender(Gender.FEMALE);
         summerSmith.setStatus(Status.ALIVE);
-
         List<MovieCharacter> movieCharactersToSave = List.of(rickSanchez, summerSmith);
-
         ApiResponseDto apiResponseDto = new ApiResponseDto();
         apiResponseDto.setInfo(new ApiInfoDto());
         apiResponseDto.setResults(new ApiCharacterDto[]
                 {rickSanchezDto, mortySmithDto, summerSmithDto});
-
         Set<Long> externalIds = new HashSet<>();
         externalIds.add(rickSanchezDto.getId());
         externalIds.add(mortySmithDto.getId());
         externalIds.add(summerSmithDto.getId());
-
         MovieCharacter rickSanchezWithId = new MovieCharacter();
         rickSanchezWithId.setId(1L);
         rickSanchezWithId.setExternalId(1L);
@@ -88,7 +83,6 @@ class MovieCharacterServiceImplTest {
         summerSmithWithID.setGender(Gender.FEMALE);
         summerSmithWithID.setStatus(Status.ALIVE);
         List<MovieCharacter> expected = List.of(rickSanchezWithId, summerSmithWithID);
-
         Mockito.when(movieCharacterRepository.findAllByExternalIdIn(externalIds))
                 .thenReturn(List.of(mortySmith));
         Mockito.when(movieCharacterRepository.saveAll(movieCharactersToSave))
@@ -97,9 +91,7 @@ class MovieCharacterServiceImplTest {
                 .thenReturn(rickSanchez);
         Mockito.when(movieCharacterMapper.parseApiCharacterResponseDto(summerSmithDto))
                 .thenReturn(summerSmith);
-
         List<MovieCharacter> actual = movieCharacterService.saveDtoToDb(apiResponseDto);
-
         Assertions.assertEquals(expected, actual);
     }
 }
