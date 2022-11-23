@@ -30,7 +30,7 @@ class MovieCharacterServiceImplTest {
     private MovieCharacterMapper movieCharacterMapper;
 
     @Test
-    void saveDtoToDbShouldSaveDataToDbOk() {
+    void saveDtoToDb_ShouldSaveDataToDb_Ok() {
         ApiCharacterDto rickSanchezDto = new ApiCharacterDto();
         rickSanchezDto.setId(1L);
         rickSanchezDto.setName("Rick Sanchez");
