@@ -3,7 +3,7 @@
 ***Web-application that get data from another API and save it to DB***
 
 ## Features:
-> - save a movie-character by API with synchronization every day at 24:00 
+> - save a movie-character by API with synchronization by time
 > - get random movie-character
 > - get a movie-character by name
 

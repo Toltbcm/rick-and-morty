@@ -15,9 +15,9 @@ import lombok.Data;
 @Table(name = "movie_characters")
 public class MovieCharacter {
     @Id
-    @GeneratedValue(generator = "movie_character_id_seq", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "movie_character_id_seq",
-            sequenceName = "movie_character_id_seq",
+    @GeneratedValue(generator = "movie_characters_id_seq", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "movie_characters_id_seq",
+            sequenceName = "movie_characters_id_seq",
             allocationSize = 1)
     private Long id;
     private Long externalId;
