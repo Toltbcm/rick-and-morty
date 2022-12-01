@@ -18,14 +18,12 @@ import tolik.home.springboot.rickandmortyapp.model.MovieCharacter;
 import tolik.home.springboot.rickandmortyapp.model.Status;
 import tolik.home.springboot.rickandmortyapp.service.MovieCharacterServiceImpl;
 
-;
-
 @SpringBootTest
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
 class MovieCharacterControllerTest {
     @MockBean
-    MovieCharacterServiceImpl movieCharacterService;
+    private MovieCharacterServiceImpl movieCharacterService;
 
     @Autowired
     private MockMvc mockMvc;

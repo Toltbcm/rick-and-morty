@@ -1,5 +1,7 @@
 package tolik.home.springboot.rickandmortyapp.controller;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,13 +26,17 @@ public class MovieCharacterController {
     }
 
     @GetMapping("/random")
+    @ApiOperation(value = "Get random character from.")
     public CharacterResponseDto getRandom() {
         MovieCharacter character = characterService.getRandomCharacters();
         return characterMapper.toResponseDto(character);
     }
 
     @GetMapping("/by-name")
-    public List<CharacterResponseDto> findByName(@RequestParam("name") String namePart) {
+    @ApiOperation(value = "Get characters by part of the name.")
+    public List<CharacterResponseDto> findByName(
+            @ApiParam(value = "Rick and rick not the same.")
+            @RequestParam("name") String namePart) {
         return characterService.findAllByNameContains(namePart).stream()
                 .map(characterMapper::toResponseDto)
                 .collect(Collectors.toList());
