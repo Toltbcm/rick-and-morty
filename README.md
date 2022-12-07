@@ -32,3 +32,4 @@
 ## Example requests
 > - http://localhost:8090/movie-characters/random
 > - http://localhost:8090/movie-characters/by-name?
+# autoservice
