@@ -1,5 +1,6 @@
 --liquibase formatted sql
---changeSet <postgres>:<create-movie-character-table>
+--changeSet <postgres>:<create-movie-characters-table>
+
 CREATE TABLE IF NOT EXISTS public.movie_characters
 (
         id bigint NOT NULL,
