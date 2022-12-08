@@ -18,7 +18,7 @@ services:
   app:
     depends_on:
       - postgres
-    image:  olhovsky/rick-and-morty-app
+    image:  toltbcm/rick-and-morty-app
     build: .
     env_file: ./.env
     ports:
