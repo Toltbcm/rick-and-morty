@@ -22,6 +22,7 @@
 > - Java 11
 > - Liquibase
 > - Docker
+> - Swagger
 
 
 ## How to run this project:
